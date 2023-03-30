@@ -39,17 +39,18 @@ def main(url, download_directory, interval):
         try:
             image_links = get_image_links(url)
             for link in image_links:
-                temp_path, file_name = download_image(link, download_directory)
-                md5_hash = md5_file(temp_path)
+                _, file_type = os.path.splitext(link)
+                if file_type.lower() in ['.jpg', '.jpeg', '.bmp']:
+                    temp_path, file_name = download_image(link, download_directory)
+                    md5_hash = md5_file(temp_path)
 
-                if md5_hash not in downloaded_images_hash:
-                    downloaded_images_hash.add(md5_hash)
-                    final_path = os.path.join(download_directory, file_name)
-                    os.rename(temp_path, final_path)
-                    print(f"[+] Successfully downloaded {link}")
-                else:
-                    os.remove(temp_path)
-                    print(f"[-] Duplicate image found: {link}")
+                    if md5_hash not in downloaded_images_hash:
+                        downloaded_images_hash.add(md5_hash)
+                        final_path = os.path.join(download_directory, file_name)
+                        os.rename(temp_path, final_path)
+                        print(f"[+] Successfully downloaded {link}")
+                    else:
+                        os.remove(temp_path)
         except Exception as e:
             print(f"[!] Error while processing: {e}")
         
@@ -57,7 +58,7 @@ def main(url, download_directory, interval):
         time.sleep(interval)
 
 if __name__ == "__main__":
-    url = "https://twitter.com/search?q=ChatGPT&src=trend_click&vertical=trends"
+    url = "https://vg.no"
     download_directory = "downloaded_images"
     interval = 15 # Seconds
 
