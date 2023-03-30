@@ -6,6 +6,7 @@ import hashlib
 import time
 import shutil
 import tempfile
+from modules import stegseek
 
 def get_image_links(url):
     response = requests.get(url)
@@ -43,12 +44,13 @@ def main(url, download_directory, interval):
                 if file_type.lower() in ['.jpg', '.jpeg', '.bmp']:
                     temp_path, file_name = download_image(link, download_directory)
                     md5_hash = md5_file(temp_path)
-
                     if md5_hash not in downloaded_images_hash:
                         downloaded_images_hash.add(md5_hash)
                         final_path = os.path.join(download_directory, file_name)
                         os.rename(temp_path, final_path)
                         print(f"[+] Successfully downloaded {link}")
+
+                        stegseek.crack_wordlist(final_path, "rockyou.txt")
                     else:
                         os.remove(temp_path)
         except Exception as e:
