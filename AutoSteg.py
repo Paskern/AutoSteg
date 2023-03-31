@@ -45,6 +45,7 @@ def main(url, download_directory, interval):
             image_links = get_image_links(url)
             for link in image_links:
                 link = link.split("?")[0]
+                
                 if any(file_type in link.lower() for file_type in allowed_file_types):
                     temp_path, file_name = download_image(link, download_directory)
                     md5_hash = md5_file(temp_path)
